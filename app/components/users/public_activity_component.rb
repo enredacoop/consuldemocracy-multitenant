@@ -55,7 +55,7 @@ class Users::PublicActivityComponent < ApplicationComponent
     end
 
     def follows
-      @follows ||= user.follows.select { |follow| follow.followable.present? }
+      @follows ||= user.follows.where.associated(:followable)
     end
 
     def count(filter)
