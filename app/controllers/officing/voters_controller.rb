@@ -25,7 +25,11 @@ class Officing::VotersController < Officing::BaseController
       officer_assignment: officer_assignment(@poll)
     }
 
-    Poll::Voter.find_by(attributes) || Poll::Voter.create_or_find_by!(attributes)
+    begin
+      Poll::Voter.create_or_find_by!(attributes)
+    rescue ActiveRecord::RecordInvalid
+      Poll::Voter.find_by!(attributes)
+    end
   end
 
   private
