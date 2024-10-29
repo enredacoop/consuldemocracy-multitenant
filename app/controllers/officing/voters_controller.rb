@@ -14,7 +14,7 @@ class Officing::VotersController < Officing::BaseController
     @poll = Poll.find(voter_params[:poll_id])
     @user = User.find(voter_params[:user_id])
 
-    Poll::Voter.create_or_find_by!(
+    attributes = {
       document_type: @user.document_type,
       document_number: @user.document_number,
       user: @user,
@@ -23,7 +23,9 @@ class Officing::VotersController < Officing::BaseController
       officer: current_user.poll_officer,
       booth_assignment: current_booth.booth_assignments.find_by(poll: @poll),
       officer_assignment: officer_assignment(@poll)
-    )
+    }
+
+    Poll::Voter.find_by(attributes) || Poll::Voter.create_or_find_by!(attributes)
   end
 
   private
