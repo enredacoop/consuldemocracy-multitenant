@@ -58,23 +58,6 @@ describe Polls::Questions::QuestionComponent do
     expect(page).to have_field "No", type: :radio, checked: false
   end
 
-  skip "disables fields when maximum votes has been reached" do # TODO: requires JavaScript
-    user = create(:user, :verified)
-    question = create(:poll_question_multiple, :abc, max_votes: 2, author: user)
-    option_a = question.question_options.find_by(title: "Answer A")
-    option_c = question.question_options.find_by(title: "Answer C")
-
-    create(:poll_answer, author: user, question: question, option: option_a)
-    create(:poll_answer, author: user, question: question, option: option_c)
-    sign_in(user)
-
-    render_inline Polls::Questions::QuestionComponent.new(question)
-
-    expect(page).to have_field "Answer A", type: :checkbox, checked: true
-    expect(page).to have_field "Answer B", type: :checkbox, checked: false
-    expect(page).to have_field "Answer C", type: :checkbox, checked: true
-  end
-
   it "renders disabled answers when the user has already voted in a booth" do
     user = create(:user, :level_two)
     create(:poll_voter, :from_booth, poll: poll, user: user)
