@@ -203,3 +203,26 @@ section "Creating DEMO polls" do
 
   poll.update(updated_at: 3.days.ago)
 end
+
+section "Creating Staging polls" do
+  poll = Poll.create!(name: "Consul Democracy features",
+                      starts_at: 1.minute.from_now.beginning_of_minute,
+                      ends_at: 1.week.from_now.beginning_of_minute,
+                      author_id: 1,
+                      geozone_restricted: false)
+
+  question = poll.questions.create!(title: "Does Consul need more features?", author_id: 1)
+  question.question_options.create!(title: "Yes", given_order: 1)
+  question.question_options.create!(title: "No", given_order: 2)
+
+  multiple_question = poll.questions.create!(
+    title: "Choose the best participatory processes in Consul",
+    author_id: 1
+  )
+  multiple_question.create_votation_type!(vote_type: :multiple, max_votes: 3)
+  multiple_question.question_options.create!(title: "Proposals", given_order: 1)
+  multiple_question.question_options.create!(title: "Debates", given_order: 2)
+  multiple_question.question_options.create!(title: "Polls", given_order: 3)
+  multiple_question.question_options.create!(title: "Collaborative legislation", given_order: 4)
+  multiple_question.question_options.create!(title: "Participatory budgets", given_order: 5)
+end
